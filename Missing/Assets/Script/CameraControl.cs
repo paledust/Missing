@@ -17,14 +17,8 @@ public class CameraControl : MonoBehaviour {
 	}
 	void Update () {
 		RotateControl(Input.GetAxis("RightStickX") * AgileX, Input.GetAxis("RightStickY") * AgileY, Speed);
-		
-		if(Input.GetAxis("RightTrigger")>0.0f)
-			Debug.Log(Input.GetAxis("RightTrigger"));
 
-		if(Input.GetAxis("LeftTrigger")>0.0f)
-			Debug.Log(Input.GetAxis("LeftTrigger"));
-
-		Observe(AxisToInput(Input.GetAxis("RightTrigger"),ObserveFOV,startFOV), ZoomSpeed);
+		Observe(AxisToInput(-Input.GetAxis("LeftStickY"),ObserveFOV,startFOV), ZoomSpeed);
 	}
 
 	public void RotateControl(float AngleX, float AngleY, float _Speed)
@@ -55,7 +49,6 @@ public class CameraControl : MonoBehaviour {
 		else
 			Camera.main.fieldOfView = ZoomDegree;
 	}
-
 	public void Observe(float ZoomDegree, float MaxFOV, float MinFOV, float ZoomSpeed)
 	{
 		if(Mathf.Abs(ZoomDegree - Camera.main.fieldOfView) > 0.1f)
