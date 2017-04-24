@@ -5,27 +5,24 @@ using UnityStandardAssets.ImageEffects;
 public class BlinkEye : MonoBehaviour {
 	public float ShakeDegree;
 	public float BlurDegree;
-	private TiltShift tiltShift;
-	private DoubleVisionEffect doubleVision;
+
+	[SerializeField] Human_Brain Brain;
 
 	// Use this for initialization
-	void Start () {
-		doubleVision = GetComponent<DoubleVisionEffect>();
-		tiltShift = GetComponent<TiltShift>();
-	}
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetAxis("LeftTrigger") < 1.0f)
 			BlurSight(Input.GetAxis("LeftTrigger")*10);
 		else
 			BlurSight(0.0f);
-		
 	}
 
 	void BlurSight(float _BlurAmount)
 	{
-		tiltShift.blurArea = Mathf.Lerp(tiltShift.blurArea, _BlurAmount, BlurDegree * Time.deltaTime);
-		tiltShift.maxBlurSize = Mathf.Lerp(tiltShift.maxBlurSize, _BlurAmount, BlurDegree * Time.deltaTime);
-		doubleVision.blurAmount = Mathf.Lerp(doubleVision.blurAmount,  _BlurAmount/2* Random.Range(-1.0f,1.0f), ShakeDegree*Time.deltaTime);
+		DoubleVisionEffect doubleVision = Brain.GetComponent<Human_Brain>().doubleVision;
+		Brain.tiltShift.blurArea = Mathf.Lerp(Brain.tiltShift.blurArea, _BlurAmount, BlurDegree * Time.deltaTime);
+		Brain.tiltShift.maxBlurSize = Mathf.Lerp(Brain.tiltShift.maxBlurSize, _BlurAmount, BlurDegree * Time.deltaTime);
+		doubleVision.SET_BlurAmount(Mathf.Lerp(doubleVision.GET_BlurAmount(),  _BlurAmount/2* Random.Range(-1.0f,1.0f), ShakeDegree*Time.deltaTime)); 
 	}
 }

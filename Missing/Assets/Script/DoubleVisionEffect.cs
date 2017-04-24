@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
-public class DoubleVisionEffect : MonoBehaviour
-{
-    public float blurAmount = 0.8f;
-    public Shader shader;
+public class DoubleVisionEffect{
+    private float blurAmount = 0.8f;
+    private Shader shader;
     private Material mat;
     private RenderTexture accumTexture;
 
-    void Start()
-    {
-        mat = new Material(shader);
-        mat.hideFlags = HideFlags.HideAndDontSave;
+    public DoubleVisionEffect(Shader Tar_Shader = null, float _BlurAmount = 0.8f){
+        blurAmount = _BlurAmount;
+        shader = Tar_Shader;
+        mat = new Material(shader);
+        mat.hideFlags = HideFlags.HideAndDontSave;
     }
 
-    void OnRenderImage (RenderTexture src, RenderTexture dst)
-    {
-        if(accumTexture == null)
-        {
+    public void _OnRenderImage (RenderTexture src, RenderTexture dst){
+        if(accumTexture == null){
             accumTexture = new RenderTexture(src.width, src.height, 0);
             accumTexture.hideFlags = HideFlags.HideAndDontSave;
             Graphics.Blit( src, accumTexture);
@@ -27,5 +25,11 @@ public class DoubleVisionEffect : MonoBehaviour
 
         Graphics.Blit (src, accumTexture, mat);
         Graphics.Blit(accumTexture, dst);
+    }
+    public void SET_BlurAmount(float _blurAmount){
+        blurAmount = _blurAmount;
+    }
+    public float GET_BlurAmount(){
+        return blurAmount;
     }
 }
