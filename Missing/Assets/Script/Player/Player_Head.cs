@@ -12,10 +12,6 @@ public class Player_Head : Human_Head {
 	// Update is called once per frame
 	protected override void Update () {
 		ProcessMouse();
-		RotateControl(GetControlX() * AgileX, GetControlY() * AgileY, Speed);
-	}
-	protected void ProcessMouse(){
-		mouseControlAxis.x += Input.GetAxis("Mouse X");
-		mouseControlAxis.y += Input.GetAxis("Mouse Y");
+		RotateControl(GetControlX() * RangeX, GetControlY() * RangeY, Speed);
 	}
 }

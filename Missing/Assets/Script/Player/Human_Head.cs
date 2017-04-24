@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class Human_Head : MonoBehaviour {
 	[SerializeField] protected float Speed;
-	[SerializeField] protected float AgileX;
-	[SerializeField] protected float AgileY;
-
+	[SerializeField] protected float RangeX;
+	[SerializeField] protected float RangeY;
+	[SerializeField] protected bool ActiveMouse = true;
 	protected Quaternion tempRotation;
 	protected Vector2 mouseControlAxis;
+	private int mouseFlag{
+		get{
+			if(ActiveMouse)
+				return 1;
+			return 0;
+		}
+	}
 	virtual protected void Start(){
 		tempRotation = transform.rotation;
 	}
 	virtual protected void Update () {
 	}
-
 	public void RotateControl(float AngleX, float AngleY, float _Speed){
 		Quaternion CamRotationAngle = FromAxisToRotate(AngleX, Vector3.up) * FromAxisToRotate(AngleY, Vector3.right);
 		tempRotation = Quaternion.Lerp(tempRotation, CamRotationAngle, Time.deltaTime * _Speed);
@@ -36,7 +42,7 @@ public class Human_Head : MonoBehaviour {
 	protected float GetControlX(){return Input.GetAxis("RightStickX") + mouseControlAxis.x;}
 	protected float GetControlY(){return Input.GetAxis("RightStickY") - mouseControlAxis.y;}
 	protected void ProcessMouse(){
-		mouseControlAxis.x += Input.GetAxis("Mouse X");
-		mouseControlAxis.y += Input.GetAxis("Mouse Y");
+		mouseControlAxis.x += mouseFlag * Input.GetAxis("Mouse X");
+		mouseControlAxis.y += mouseFlag * Input.GetAxis("Mouse Y");
 	}
 }

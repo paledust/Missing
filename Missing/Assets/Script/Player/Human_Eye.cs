@@ -34,22 +34,27 @@ public class Human_Eye : MonoBehaviour {
 	public void SetStatus(Eye_State _eye_State){
 		eye_State = _eye_State;
 	}
-	protected void CloseUpdate(){
-
+	void CloseUpdate(){
 	}
-	protected void HalfUpdate(){
+	void HalfUpdate(){
 		ray = new Ray(transform.position, transform.rotation * Vector3.forward);
 		if(Physics.Raycast(ray.origin,ray.direction, out rayhit,500.0f))
 		{
 			Debug.Log(rayhit.collider.gameObject.name);
 		}
 	}
-	protected void OpenUpdate(){
+	void OpenUpdate(){
 		ray = new Ray(transform.position, transform.rotation * Vector3.forward);
 		if(Physics.Raycast(ray.origin,ray.direction, out rayhit,500.0f))
 		{
 			Debug.Log(rayhit.collider.gameObject.name);
 		}
-		Debug.DrawLine(ray.origin, ray.direction*10.0f + ray.origin, Color.green);
+		_OpenUpdate();
+	}
+	protected virtual void _OpenUpdate(){
+	}
+	protected virtual void _HalfUpdate(){
+	}
+	protected virtual void _CloseUpdate(){
 	}
 }

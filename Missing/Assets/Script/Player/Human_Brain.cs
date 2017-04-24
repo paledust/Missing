@@ -19,7 +19,7 @@ public class Human_Brain : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Observe(AxisToInput(-Input.GetAxis("LeftStickY"), ObserveFOV, startFOV), ZoomSpeed);
+		Observe(AxisToInput(Mathf.Clamp(-Input.GetAxis("LeftStickY"),0,1), ObserveFOV, startFOV), ZoomSpeed);
 	}
 	void OnRenderImage(RenderTexture src, RenderTexture dst){
 		doubleVision._OnRenderImage(src, dst);
@@ -32,12 +32,6 @@ public class Human_Brain : MonoBehaviour {
 	public void Observe(float ZoomDegree, float _ZoomSpeed){
 		if(Mathf.Abs(ZoomDegree - Camera.main.fieldOfView) > 0.1f)
 			Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, ZoomDegree, _ZoomSpeed * Time.deltaTime);
-		else
-			Camera.main.fieldOfView = ZoomDegree;
-	}
-	public void Observe(float ZoomDegree, float MaxFOV, float MinFOV, float ZoomSpeed){
-		if(Mathf.Abs(ZoomDegree - Camera.main.fieldOfView) > 0.1f)
-			Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, ZoomDegree, ZoomSpeed * Time.deltaTime);
 		else
 			Camera.main.fieldOfView = ZoomDegree;
 	}
