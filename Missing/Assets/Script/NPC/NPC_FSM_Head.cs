@@ -14,6 +14,7 @@ public class NPC_FSM_Head : Human_Head {
 	}
 	protected override void Update(){
 		base.Update();
+
 		fsm.Update();
 	}
 	public void SET_SEEN(bool _if_Seen, GameObject _Engaging_Object){_IF_SEEN = _if_Seen; ENGAGING_Object = _Engaging_Object;}
@@ -28,7 +29,7 @@ public class NPC_FSM_Head : Human_Head {
 		}
 		public override void Update(){
 			Debug.Log("In PENDING STATE");
-			Context.LookTo(Context.transform.parent.rotation * Vector3.forward + Context.transform.position);
+			Context.LookTo(Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position);
 			if(Context._IF_SEEN){
 				timer += Time.deltaTime;
 				if(timer >= ExitTime){
@@ -50,7 +51,7 @@ public class NPC_FSM_Head : Human_Head {
 		}
 		public override void Update(){
 			Debug.Log("In ENGAGING STATE");
-			Context.LookTo(Context.ENGAGING_Object.transform.position	);
+			Context.LookTo(Context.ENGAGING_Object.transform.position);
 			if(!Context._IF_SEEN){
 				timer += Time.deltaTime;
 				if(timer >= ExitTime){

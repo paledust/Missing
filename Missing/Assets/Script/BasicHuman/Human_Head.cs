@@ -29,4 +29,7 @@ public class Human_Head : MonoBehaviour {
 	protected void LookTo(Vector3 Look_Point){
 		transform.LookAt(Look_Point);
 	}
+	protected Vector3 RandomLookPoint(){
+		return new Vector3(Random.Range(-1.0f,1.0f), Random.Range(-1.0f,1.0f), Random.Range(-1.0f,1.0f));
+	}
 }
