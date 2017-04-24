@@ -3,19 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Human_Head : MonoBehaviour {
-	[SerializeField] protected float Speed;
-	[SerializeField] protected float RangeX;
-	[SerializeField] protected float RangeY;
-	[SerializeField] protected bool ActiveMouse = true;
 	protected Quaternion tempRotation;
 	protected Vector2 mouseControlAxis;
-	private int mouseFlag{
-		get{
-			if(ActiveMouse)
-				return 1;
-			return 0;
-		}
-	}
+
 	virtual protected void Start(){
 		tempRotation = transform.rotation;
 	}
@@ -33,16 +23,10 @@ public class Human_Head : MonoBehaviour {
 	protected Quaternion FromAxisToRotate(float AngleAxis, Vector3 RotateAxis){
 		return Quaternion.AngleAxis(AngleAxis,RotateAxis);
 	}
-
-	protected float AxisToInput(float TriggerAxis, float MaxFOV, float MinFOV){
-		float tempFOV = (MaxFOV - MinFOV) * TriggerAxis + MinFOV;
-
-		return tempFOV;
+	protected void RotateTo(Transform _ToTrans){
+		transform.LookAt(_ToTrans);
 	}
-	protected float GetControlX(){return Input.GetAxis("RightStickX") + mouseControlAxis.x;}
-	protected float GetControlY(){return Input.GetAxis("RightStickY") - mouseControlAxis.y;}
-	protected void ProcessMouse(){
-		mouseControlAxis.x += mouseFlag * Input.GetAxis("Mouse X");
-		mouseControlAxis.y += mouseFlag * Input.GetAxis("Mouse Y");
+	protected void LookTo(Vector3 Look_Point){
+		transform.LookAt(Look_Point);
 	}
 }
