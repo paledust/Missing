@@ -23,9 +23,6 @@ public class Human_Head : MonoBehaviour {
 	protected Quaternion FromAxisToRotate(float AngleAxis, Vector3 RotateAxis){
 		return Quaternion.AngleAxis(AngleAxis,RotateAxis);
 	}
-	protected void RotateTo(Transform _ToTrans){
-		transform.LookAt(_ToTrans);
-	}
 	protected void LookTo(Vector3 Look_Point){
 		transform.LookAt(Look_Point);
 	}

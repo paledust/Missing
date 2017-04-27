@@ -48,9 +48,11 @@ public class FSM<TContext> {
 		}
 		_stateCache.Clear();
 	}
+	public bool IF_IN_THIS_STATE<TState>() where TState: State{
+		return typeof(TState) == CurrentState.GetType();
+	}
 
-	public abstract class State
-	{
+	public abstract class State{
 		internal FSM<TContext> parent {get; set;}
 		protected TContext Context{get{return parent._context;}}
 		protected void TransitionTo<TState>() where TState: State{

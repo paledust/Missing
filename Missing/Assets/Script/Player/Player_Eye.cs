@@ -7,11 +7,14 @@ public class Player_Eye : Human_Eye {
 	public float ShakeDegree;
 	public float BlurDegree;
 
+	[SerializeField] bool EnableBlur;
 	[SerializeField] Human_Brain Brain;
+	private int _EnableBlur{get{return EnableBlur ? 1 : 0;}}
 	protected void BlurSight(float _BlurAmount){
+		Brain.tiltShift.blurArea = _EnableBlur * Mathf.Lerp(Brain.tiltShift.blurArea, Mathf.Clamp(_BlurAmount, 4.0f,20.0f), BlurDegree * Time.deltaTime);
+		Brain.tiltShift.maxBlurSize = _EnableBlur * Mathf.Lerp(Brain.tiltShift.maxBlurSize, Mathf.Clamp(_BlurAmount, 4.0f,10.0f), BlurDegree * Time.deltaTime);
+		
 		DoubleVisionEffect doubleVision = Brain.GetComponent<Human_Brain>().doubleVision;
-		Brain.tiltShift.blurArea = Mathf.Lerp(Brain.tiltShift.blurArea, Mathf.Clamp(_BlurAmount, 4.0f,20.0f), BlurDegree * Time.deltaTime);
-		Brain.tiltShift.maxBlurSize = Mathf.Lerp(Brain.tiltShift.maxBlurSize, Mathf.Clamp(_BlurAmount, 4.0f,10.0f), BlurDegree * Time.deltaTime);
 		doubleVision.SET_BlurAmount(Mathf.Lerp(doubleVision.GET_BlurAmount(),  _BlurAmount/2* Random.Range(-1.0f,1.0f), ShakeDegree * Time.deltaTime)); 
 	}
 

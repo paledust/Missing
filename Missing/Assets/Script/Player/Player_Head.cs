@@ -7,13 +7,7 @@ public class Player_Head : Human_Head {
 	[SerializeField] protected float RangeX;
 	[SerializeField] protected float RangeY;
 	[SerializeField] protected bool ActiveMouse = true;
-	private int mouseFlag{
-		get{
-			if(ActiveMouse)
-				return 1;
-			return 0;
-		}
-	}
+	private int mouseFlag{get{return ActiveMouse ? 1:0;}}
 	// Use this for initialization
 	protected override void Start () {
 		tempRotation = transform.rotation;
