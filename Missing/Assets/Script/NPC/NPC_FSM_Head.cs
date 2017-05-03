@@ -1,19 +1,23 @@
 ﻿using UnityEngine;
 
 public class NPC_FSM_Head : Human_Head {
+	[SerializeField] int Sensibility = -10;
 	protected FSM<NPC_FSM_Head> fsm;
 	protected GameObject ENGAGING_Object;
-	private bool _IF_ENGAGIN = false;
-	private float ENGAGE_ENTER_TIME;
-	public bool IF_ENGAGING{get{return _IF_ENGAGIN;}}
+	protected GameObject Looker;
+	public bool IF_ENGAGING{get{return fsm.IF_IN_THIS_STATE<ENGAGING_State>();}}
 	public int CurrentPriority = -1;
+	protected int PendingPriority = -1;
+	protected bool IF_BEING_LOOKED;
+
 	protected override void Start(){
 		Service.eventManager.RegisterHandler<Fall_Event>(ENGAGE_EVENT<Fall_Event>);
-		Service.eventManager.RegisterHandler<Shift_Event>(ENGAGE_EVENT<Shift_Event>);
+		// Service.eventManager.RegisterHandler<Shift_Event>(ENGAGE_EVENT<Shift_Event>);
 
-		CurrentPriority = -1;
+		CurrentPriority = Sensibility;
+		PendingPriority = CurrentPriority;
+
 		tempRotation = transform.rotation;
-		_IF_ENGAGIN = false;
 		base.Start();
 		fsm = new FSM<NPC_FSM_Head>(this);
 		fsm.TransitionTo<PENDING_State>();
@@ -22,42 +26,44 @@ public class NPC_FSM_Head : Human_Head {
 		base.Update();
 		fsm.Update();
 	}
-	public void SET_ENGAGING(bool _if_Engaging, GameObject _Engaging_Object, float _Engage_Enter_Time = 0.0f){
-		_IF_ENGAGIN = _if_Engaging;
+	protected void SET_ENGAGING(bool _if_Aware, GameObject _Engaging_Object){
 		ENGAGING_Object = _Engaging_Object;
-		ENGAGE_ENTER_TIME = _Engage_Enter_Time;
+		fsm.TransitionTo<ENGAGING_State>();
 	}
 	//FSM STATE
-	public class NPC_State: FSM<NPC_FSM_Head>.State{}
+	public class NPC_State: FSM<NPC_FSM_Head>.State{		
+		protected float timer = 0.0f;
+		protected float ExitTime = 2.0f;
+	}
 	public class PENDING_State: NPC_State{
-		private float timer = 0.0f;
-		private float ExitTime = 2.0f;
+		protected float LookTimer = 0.0f;
+		protected float RandomTimer;
 		public override void Init(){
-			timer = 0.0f;
+			LookTimer = 0.0f;
+			RandomTimer = 0.0f;
 			ExitTime = 2.0f;
 		}
 		public override void OnEnter(){
-			timer = 0.0f;
-			ExitTime = Context.ENGAGE_ENTER_TIME;
+			Context.CurrentPriority = Context.Sensibility;
+			LookTimer = 0.0f;
 		}
 		public override void Update(){
-			Context.LookTo(Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position);
-			if(Context._IF_ENGAGIN){
-				timer += Time.deltaTime;
-				if(timer >= ExitTime){
-					TransitionTo<ENGAGING_State>();
-				}
+			RandomTimer += Time.deltaTime;
+			if(RandomTimer >= Random.Range(2.0f,100.0f)){
+				Context.LookTo(Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position);
+				RandomTimer = 0.0f;
 			}
-			else{
-				if(timer != 0.0f){
-					timer = 0.0f;
-				}
+			if(Context.IF_BEING_LOOKED){
+				LookTimer += Time.deltaTime;
+			}
+
+			if(LookTimer >= 2.0f){
+				Context.CurrentPriority = -9;
+				Context.SET_ENGAGING(true, Context.Looker);
 			}
 		}
 	}
-	public class ENGAGING_State: NPC_State{
-		private float timer = 0.0f;
-		private float ExitTime = 2.0f;
+	public class REACT_State: NPC_State{
 		public override void Init(){
 			timer = 0.0f;
 		}
@@ -65,32 +71,39 @@ public class NPC_FSM_Head : Human_Head {
 			timer = 0.0f;
 		}
 		public override void Update(){
+			timer += Time.deltaTime;
+		}
+	}
+	public class ENGAGING_State: NPC_State{
+		public override void Init(){
+			timer = 0.0f;
+		}
+		public override void OnEnter(){
+			timer = 0.0f;
+		}
+		public override void Update(){
+			Debug.Assert(Context.ENGAGING_Object);
 			Context.LookTo(Context.ENGAGING_Object.transform.position);
-			if(!Context._IF_ENGAGIN){
-				timer += Time.deltaTime;
-				if(timer >= ExitTime){
-					TransitionTo<PENDING_State>();
-				}
-			}
-			else{
-				if(timer != 0.0f){
-					timer = 0.0f;
-				}
+
+			timer += Time.deltaTime;
+			if(timer >= ExitTime){
+				Context.SET_ENGAGING(false, null);
+				TransitionTo<PENDING_State>();
 			}
 		}
 	}
 
 	protected void ENGAGE_EVENT<TEvent>(Event e) where TEvent: Att_Event{
 		TEvent tempEvent = e as TEvent;
-		Debug.Log(tempEvent.ToString());
 		if((transform.position - tempEvent.context.transform.position).magnitude <= tempEvent.AffectRange){
 			if(tempEvent.priority > CurrentPriority){
 				CurrentPriority = tempEvent.priority;
 				SET_ENGAGING(true, tempEvent.context);
 			}
 		}
-		else{
-			
-		}
+	}
+	public void BE_LOOKED(bool if_Look,GameObject _Looker, float _Engage_Enter_Time = 2.0f){
+		IF_BEING_LOOKED = if_Look;
+		Looker = _Looker;
 	}
 }

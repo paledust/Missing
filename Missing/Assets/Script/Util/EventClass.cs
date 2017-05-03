@@ -6,6 +6,17 @@ public abstract class Event {
 	public delegate void Handler(Event e);
 }
 
+public class Change_Event:Event{
+	public readonly InterestingObject context;
+	public readonly int priority;
+	public readonly float AffectRange;
+	public Change_Event(int _priority = 0, float _affectRange = 5.0f, InterestingObject _context = null){
+		priority = _priority;
+		AffectRange = _affectRange;
+		context = _context;
+	}
+}
+
 public class Att_Event:Event{
 	public readonly GameObject context;
 	public readonly int priority;
@@ -26,7 +37,12 @@ public class Shift_Event: Att_Event{
 }
 
 [System.SerializableAttribute]
-public struct BaseEventInfo{
+public struct BaseObjectInfo{
 	public int priority;
 	public float AffectRange;
+
+	public BaseObjectInfo(int _priority = -10, float _affectRange = 0.0f){
+		priority = _priority;
+		AffectRange = _affectRange;
+	}
 }

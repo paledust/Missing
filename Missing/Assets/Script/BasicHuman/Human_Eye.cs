@@ -54,7 +54,7 @@ public class Human_Eye : MonoBehaviour {
 	protected void SeeSomething(){
 		ChangingObject();
 		if(SeenObject != null)
-			SeenObject.GetComponent<NPC_FSM_Head>().SET_ENGAGING(true, gameObject, 2.0f);
+			SeenObject.GetComponent<NPC_FSM_Head>().BE_LOOKED(true, gameObject);
 		ChangingObject();
 	}
 	private Collider EyeRaycast(){
@@ -68,13 +68,13 @@ public class Human_Eye : MonoBehaviour {
 	private void ChangingObject(){
 		if(EyeRaycast() !=null && EyeRaycast().GetComponent<NPC_FSM_Head>() && EyeRaycast().gameObject != SeenObject){
 			if(SeenObject != null){
-				SeenObject.GetComponent<NPC_FSM_Head>().SET_ENGAGING(false, gameObject, 2.0f);
+				SeenObject.GetComponent<NPC_FSM_Head>().BE_LOOKED(false, null);
 			}
 			SeenObject = EyeRaycast().gameObject;
 		}
 		else if(EyeRaycast() == null){
 			if(SeenObject != null){
-				SeenObject.GetComponent<NPC_FSM_Head>().SET_ENGAGING(false, gameObject, 2.0f);
+				SeenObject.GetComponent<NPC_FSM_Head>().BE_LOOKED(false, null);
 				SeenObject = null;
 			}
 		}

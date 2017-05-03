@@ -49,7 +49,10 @@ public class FSM<TContext> {
 		_stateCache.Clear();
 	}
 	public bool IF_IN_THIS_STATE<TState>() where TState: State{
-		return typeof(TState) == CurrentState.GetType();
+		if(_stateCache.ContainsKey(typeof(TState)))
+			return typeof(TState) == CurrentState.GetType();
+		else
+			return false;
 	}
 
 	public abstract class State{
