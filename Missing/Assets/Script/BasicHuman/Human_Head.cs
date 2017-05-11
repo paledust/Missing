@@ -5,6 +5,7 @@ using UnityEngine;
 public class Human_Head : MonoBehaviour {
 	protected Quaternion tempRotation;
 	protected Vector2 mouseControlAxis;
+	[SerializeField] protected float Head_RotateSpeed = 4.0f;
 
 	virtual protected void Start(){
 		tempRotation = transform.rotation;
@@ -24,7 +25,18 @@ public class Human_Head : MonoBehaviour {
 		return Quaternion.AngleAxis(AngleAxis,RotateAxis);
 	}
 	protected void LookTo(Vector3 Look_Point){
-		transform.LookAt(Look_Point);
+		Quaternion lookToRotation = Quaternion.LookRotation((transform.position - Look_Point).normalized);
+		tempRotation = Quaternion.Lerp(tempRotation, lookToRotation, Time.deltaTime * Head_RotateSpeed);
+		transform.rotation = tempRotation;
+	}
+	protected void Aside(Vector3 Look_Point,Vector3 aside_Dir, float aside_Degree){
+		Quaternion lookToRotation = Quaternion.LookRotation((transform.position - Look_Point - aside_Dir * aside_Degree).normalized);
+		tempRotation = Quaternion.Lerp(tempRotation, lookToRotation, Time.deltaTime * Head_RotateSpeed);
+		transform.rotation = tempRotation;
+	}
+
+	protected void NodeHead(float Frequency){
+
 	}
 	protected Vector3 RandomLookPoint(){
 		return new Vector3(Random.Range(-1.0f,1.0f), Random.Range(-1.0f,1.0f), Random.Range(-1.0f,1.0f));

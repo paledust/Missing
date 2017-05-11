@@ -37,7 +37,6 @@ public class Player_Eye : Human_Eye {
 	protected override void _HalfUpdate(){
 		SeeSomething();
 
-		Debug.Log(Input.GetAxis(eyeTrigger));
 		if(Input.GetAxis(eyeTrigger) < 1.0f){
 			BlurSight(Input.GetAxis(eyeTrigger)*10);
 

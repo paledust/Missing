@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FallingObject : InterestingObject {
-	private float timer;
-	private bool Trigger = false;
 	[SerializeField] float FadeTime = 3.0f;
 	// Use this for initialization
 	void OnCollisionEnter(Collision collision){
@@ -12,16 +10,12 @@ public class FallingObject : InterestingObject {
 		setInfo(baseInfo);
 		Fall_Event tempEvent = new Fall_Event(BaseInfo.priority, BaseInfo.AffectRange, gameObject);
 		Service.eventManager.FireEvent(tempEvent);
-		Trigger = true;
+
+		StartCoroutine(FadePriority());
 	}
-	void Update(){
-		if(Trigger){
-			timer += Time.deltaTime;
-			if(timer >= FadeTime){
-				Trigger = false;
-				setPriority(-1);
-				setRange(2.0f);
-			}
-		}
+	IEnumerator FadePriority(){
+		yield return new WaitForSeconds(FadeTime);
+		setPriority(-11);
+		setRange(2.0f);
 	}
 }
