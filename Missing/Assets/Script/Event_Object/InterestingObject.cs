@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InterestingObject : MonoBehaviour {
-	[SerializeField] private BaseObjectInfo _BaseInfo;
+	[SerializeField] protected BaseObjectInfo _BaseInfo;
 	public BaseObjectInfo BaseInfo{get{return _BaseInfo;}}
 
 	public void OnCreate(){}

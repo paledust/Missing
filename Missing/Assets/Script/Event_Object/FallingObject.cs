@@ -6,9 +6,7 @@ public class FallingObject : InterestingObject {
 	[SerializeField] float FadeTime = 3.0f;
 	// Use this for initialization
 	void OnCollisionEnter(Collision collision){
-		BaseObjectInfo baseInfo = new BaseObjectInfo(1,10.0f);
-		setInfo(baseInfo);
-		Fall_Event tempEvent = new Fall_Event(BaseInfo.priority, BaseInfo.AffectRange, gameObject);
+		Fall_Event tempEvent = new Fall_Event(_BaseInfo.priority, _BaseInfo.AffectRange, gameObject);
 		Service.eventManager.FireEvent(tempEvent);
 
 		StartCoroutine(FadePriority());

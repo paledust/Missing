@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Human_Head : MonoBehaviour {
+	public Vector3 RANDOM_LOOK_POINT{get{return RandomLookPoint();}}
 	protected Quaternion tempRotation;
 	protected Vector2 mouseControlAxis;
 	[SerializeField] protected float Head_RotateSpeed = 4.0f;

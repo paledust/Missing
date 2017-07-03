@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class NPC_FSM_Head : Human_Head {
+#region PARAMETER
 	[SerializeField] protected InteObject_Handler objectHandler;//Object Handler Can arrange mutilple object and find the important one for NPC to look at
 	protected FSM<NPC_FSM_Head> fsm;
 	protected GameObject Looker;
@@ -10,6 +11,7 @@ public class NPC_FSM_Head : Human_Head {
 	public int CurrentPriority{get{return objectHandler.CurrentPriority;}}
 	public InterestingObject CurrentObject {get{return objectHandler.CurrentObject;}}
 	protected bool IF_BEING_LOOKED;
+#endregion PARAMETER
 
 	protected override void Start(){
 		objectHandler = new InteObject_Handler(gameObject);
@@ -17,30 +19,44 @@ public class NPC_FSM_Head : Human_Head {
 
 		Service.eventManager.RegisterHandler<Fall_Event>(ENGAGE_SHORT_EVENT<Fall_Event>);
 		Service.eventManager.RegisterHandler<Long_Range_Event>(ENGAGE_LONG_EVENT<Long_Range_Event>);
+		Service.eventManager.RegisterHandler<Short_Range_Event>(ENGAGE_SHORT_EVENT<Short_Range_Event>);
 
 		tempRotation = transform.rotation;
 		base.Start();
+
 		fsm = new FSM<NPC_FSM_Head>(this);
 		fsm.TransitionTo<PENDING_State>();
 	}
 	protected override void Update(){
 		base.Update();
 		fsm.Update();
-		if(CurrentObject != null){
-			LookTo(CurrentObject.transform.position);
-		}
 		objectHandler.Update();
 	}
 
+#region Rewrite
 	protected virtual void PENDING_Update(){}
-	protected virtual void ENGAGING_Update(){}
+	protected virtual void ENGAGING_Update(){
+		Base_Look();
+	}
 	protected virtual void STARING_Update(){
 		if(Looker != null){
 			LookTo(Looker.transform.position);
 		}
 	}
+#endregion Rewrite
 
-	//FSM STATE
+#region Tool_Function
+	protected void Base_Look(){
+		if(CurrentObject == null){
+			fsm.TransitionTo<PENDING_State>();
+		}
+		else{
+			LookTo(CurrentObject.transform.position);
+		}
+	}
+#endregion Tool_Function
+
+#region FSM_STATE
 	public class NPC_State: FSM<NPC_FSM_Head>.State{		
 		protected float timer = 0.0f;
 		protected float ExitTime = 2.0f;
@@ -53,18 +69,18 @@ public class NPC_FSM_Head : Human_Head {
 			LookTimer = 0.0f;
 			RandomTimer = 0.0f;
 			ExitTime = 2.0f;
-			RandomLook_Dir = Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position;
+			RandomLook_Dir = Context.transform.parent.rotation * Context.RANDOM_LOOK_POINT + Context.transform.position;
 		}
 		public override void OnEnter(){
 			LookTimer = 0.0f;
-			RandomLook_Dir = Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position;
+			RandomLook_Dir = Context.transform.parent.rotation * Context.RANDOM_LOOK_POINT + Context.transform.position;
 		}
 		public override void Update(){
 			Context.PENDING_Update();
 			Context.LookTo(RandomLook_Dir);
 			RandomTimer += Time.deltaTime;
 			if(RandomTimer >= Random.Range(2.0f,100.0f)){
-				RandomLook_Dir = (Context.transform.parent.rotation * Context.RandomLookPoint() + Context.transform.position);
+				RandomLook_Dir = (Context.transform.parent.rotation * Context.RANDOM_LOOK_POINT + Context.transform.position);
 				RandomTimer = 0.0f;
 			}
 
@@ -92,12 +108,6 @@ public class NPC_FSM_Head : Human_Head {
 		}
 		public override void Update(){
 			Context.ENGAGING_Update();
-			if(Context.CurrentObject == null){
-				TransitionTo<PENDING_State>();
-			}
-			else{
-				Context.LookTo(Context.CurrentObject.transform.position);
-			}
 		}
 	}
 	public class STARING_State: NPC_State{
@@ -125,6 +135,9 @@ public class NPC_FSM_Head : Human_Head {
 			}
 		}
 	}
+#endregion FSM_STATE
+
+#region EVENT_HANDLE
 	protected void ENGAGE_SHORT_EVENT<TEvent>(Event e) where TEvent: Short_Range_Event{
 		TEvent tempEvent = e as TEvent;
 
@@ -142,4 +155,5 @@ public class NPC_FSM_Head : Human_Head {
 		IF_BEING_LOOKED = if_Look;
 		Looker = _Looker;
 	}
+#endregion EVENT_HANDLE
 }

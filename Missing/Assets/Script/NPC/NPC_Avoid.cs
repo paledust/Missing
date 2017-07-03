@@ -11,7 +11,7 @@ public class NPC_Avoid : NPC_FSM_Head {
 		if(Looker != null){
 			avoid_timer += Time.deltaTime;
 			if(avoid_timer > Random.Range(pauseRange.x, pauseRange.y)){
-				tempAside = RandomLookPoint();
+				tempAside = RANDOM_LOOK_POINT;
 				avoid_timer = 0.0f;
 			}
 			Aside(Looker.transform.position,tempAside, 2.0f);
