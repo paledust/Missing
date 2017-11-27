@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Custom_Event;
+using Event = Custom_Event.Event;
 public class NPC_Crazy : NPC_FSM_Head {
 	public InterestingObject Inte_Crazyness;
 	protected override void Start(){
@@ -16,7 +17,7 @@ public class NPC_Crazy : NPC_FSM_Head {
 			timer = 0.0f;
 			NPC_Crazy _context = Context as NPC_Crazy;
 
-			_context.Inte_Crazyness.setPriority(10);
+			_context.Inte_Crazyness.setPriority(6);
 			Short_Range_Event tempEvent = new Short_Range_Event(_context.Inte_Crazyness.BaseInfo.priority, 
 																	_context.Inte_Crazyness.BaseInfo.AffectRange, 
 																	_context.gameObject);
@@ -33,7 +34,7 @@ public class NPC_Crazy : NPC_FSM_Head {
 	public class PENDING_CRAZY_State: NPC_State{
 		public override void OnEnter(){
 			timer = 0.0f;
-			ExitTime = Random.Range(5f,10f);
+			ExitTime = Random.Range(10f,20f);
 			NPC_Crazy _context = Context as NPC_Crazy;
 
 			_context.Inte_Crazyness.setPriority(-11);

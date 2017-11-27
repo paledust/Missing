@@ -60,7 +60,6 @@ public class InteObject_Handler {
 		CurrentObject = _InterestingObject;
 	}
 	public void Add_Long(InterestingObject _InterestingObject){
-		Debug.Log("Huh");
 		LongTerm_Objects.Add(_InterestingObject);
 	}
 	public void Remove_Long(InterestingObject _InterestingObject){

@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Custom_Event;
+using Event = Custom_Event.Event;
 public class FallingObject : InterestingObject {
 	[SerializeField] float FadeTime = 3.0f;
 	// Use this for initialization

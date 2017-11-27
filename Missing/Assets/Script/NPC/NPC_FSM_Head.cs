@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using Custom_Event;
+using Event = Custom_Event.Event;
 public class NPC_FSM_Head : Human_Head {
 #region PARAMETER
 	[SerializeField] protected InteObject_Handler objectHandler;//Object Handler Can arrange mutilple object and find the important one for NPC to look at

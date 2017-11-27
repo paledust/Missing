@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Custom_Event;
+using Event = Custom_Event.Event;
 public class EventManager {
 	static private EventManager instance;
 	static public EventManager Instance{
